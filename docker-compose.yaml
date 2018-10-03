@@ -1,0 +1,39 @@
+version: '3.2'
+
+services:
+  nota-proxy:
+    image: jwilder/nginx-proxy
+    restart: unless-stopped
+    environment:
+      - DEFAULT_HOST=nota.dk
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/certs:/etc/nginx/certs
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
+        #  nota:
+        #image: nota.dk
+        #restart: unless-stopped
+        #build: 
+        #context: nota.dk
+        #environment: 
+        #- VIRTUAL_HOST=nota.dk,www.nota.dk,e17.dk,www.e17.dk
+        ##- VIRTUAL_PROTO=https
+        ##- VIRTUAL_PORT=443
+        #ports:
+        #- "80"
+        ##- "443"
+
+  lyt:
+    image: lyt
+    restart: unless-stopped
+    build:
+      context: lyt-docker
+    environment: 
+      - VIRTUAL_HOST=play.nota.dk
+      - HTTPS_METHOD=noredirect
+    ports:
+      - "80"
+
