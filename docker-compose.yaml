@@ -10,30 +10,27 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/certs:/etc/nginx/certs
+      - ./nginx/certs:/etc/nginx/certs:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
-
-        #  nota:
-        #image: nota.dk
-        #restart: unless-stopped
-        #build: 
-        #context: nota.dk
-        #environment: 
-        #- VIRTUAL_HOST=nota.dk,www.nota.dk,e17.dk,www.e17.dk
-        ##- VIRTUAL_PROTO=https
-        ##- VIRTUAL_PORT=443
-        #ports:
-        #- "80"
-        ##- "443"
+    networks:
+      - lyt_bridge
+      - nota_bridge
 
   lyt:
     image: lyt
     restart: unless-stopped
     build:
       context: lyt-docker
-    environment: 
+    environment
       - VIRTUAL_HOST=afspil.nota.dk
       - HTTPS_METHOD=noredirect
     ports:
       - "80"
+    networks:
+      - lyt_bridge
 
+networks:
+  nota_bridge:
+    external:
+      name: nota_dk_net
+  lyt_bridge:
