@@ -21,7 +21,7 @@ services:
     restart: unless-stopped
     build:
       context: lyt-docker
-    environment
+    environment:
       - VIRTUAL_HOST=afspil.nota.dk
       - HTTPS_METHOD=noredirect
     ports:
