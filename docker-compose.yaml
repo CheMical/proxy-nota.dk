@@ -22,7 +22,7 @@ services:
     build:
       context: lyt-docker
     environment:
-      - VIRTUAL_HOST=afspil.nota.dk
+      - VIRTUAL_HOST=afspil.nota.dk,afspil.dbb.dk
       - HTTPS_METHOD=noredirect
     ports:
       - "80"
