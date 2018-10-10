@@ -1,0 +1,42 @@
+version: '3.2'
+
+services:
+  nota-proxy:
+    image: jwilder/nginx-proxy
+    restart: unless-stopped
+    environment:
+      - DEFAULT_HOST=nota.dk
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      - lyt_bridge
+      - nota_bridge
+
+  lyt:
+    image: lyt
+    restart: unless-stopped
+    build:
+      context: lyt-docker
+      dockerfile: Dockerfile.dev
+      args:
+        DODP_HOST: http-m.beta.dbb.dk
+        DRUPAL_HOST: betanotaweb03.dbb.dk
+        PLAY_HOST: afspil.dbb.dk
+    environment:
+      - VIRTUAL_HOST=afspil.nota.dk,afspil.dbb.dk
+      - HTTPS_METHOD=noredirect
+    ports:
+      - "80"
+    networks:
+      - lyt_bridge
+
+networks:
+  nota_bridge:
+    external:
+      name: nota_dk_net
+  lyt_bridge:
+
